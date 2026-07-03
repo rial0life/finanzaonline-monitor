@@ -1,28 +1,24 @@
-name: FinanzaOnline Monitor
+name: Forum Monitor
 
 on:
-  workflow_dispatch:
-
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
 
 jobs:
   monitor:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-
-      - name: Install dependencies
+          python-version: '3.x'
+      - run: pip install -r requirements.txt
+      - run: python monitor.py
+      - name: Commit last_post
         run: |
-          pip install -r requirements.txt
-
-      - name: Run monitor
-        run: |
-          python monitor.py
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add last_post.txt
+          git diff --staged --quiet || git commit -m "Update last_post.txt [automated]"
+          git push
