@@ -111,3 +111,20 @@ def main():
                 for isin, name in matches:
                     notification = f"""🔔 <b>FinanzaOnline Monitor</b>
 
+📌 <b>Discussione</b> Certificati da seguire Volume LXIII
+👤 <b>Utente</b> {post['author']}
+📈 <b>ISIN</b> {isin}
+🏷️ <b>Nome</b> {name or 'N/A'}
+💬 {post['message'][:380]}...
+
+🔗 <a href="{post['link']}">Apri il post</a>"""
+                    
+                    send_telegram(notification)
+                    print(f"   ✅ Notifica inviata per {isin} (post {post['post_id']})")
+                    notified = True
+    
+    save_last_post_id(max_id)
+    print(f"Ultimo post aggiornato a: {max_id}")
+
+if __name__ == "__main__":
+    main()
